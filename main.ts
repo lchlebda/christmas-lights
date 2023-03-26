@@ -1,3 +1,25 @@
+function morseAlphabet () {
+    while (isMorse) {
+        strip.showColor(color[colorIndex])
+        if (!(isMorse)) {
+            break;
+        }
+        basic.pause(2000)
+        strip.clear()
+        strip.show()
+        basic.pause(500)
+        if (!(isMorse)) {
+            break;
+        }
+        for (let index = 0; index < 3; index++) {
+            strip.showColor(color[colorIndex])
+            basic.pause(500)
+            strip.clear()
+            strip.show()
+            basic.pause(500)
+        }
+    }
+}
 function blink2 (color: number) {
     for (let index = 0; index <= 60; index++) {
         strip.setPixelColor(index, color)
@@ -51,6 +73,7 @@ function blinkingSnake () {
 }
 input.onButtonPressed(Button.A, function () {
     isBlinking = false
+    isMorse = false
     isRainbow = true
     rainbowSnake()
 })
@@ -87,6 +110,12 @@ function doSnake (color: number) {
     }
     undoSnake()
 }
+input.onButtonPressed(Button.AB, function () {
+    isMorse = true
+    isBlinking = false
+    isRainbow = false
+    morseAlphabet()
+})
 function undoSnake () {
     for (let index = 0; index < 60; index++) {
         if (isRainbow) {
@@ -102,7 +131,8 @@ function undoSnake () {
 input.onButtonPressed(Button.B, function () {
     isBlinking = true
     isRainbow = false
-    blinkingSnake()
+    isMorse = false
+    changingBrightness()
 })
 function blink3 (color: number) {
     for (let index = 0; index <= 60; index++) {
@@ -117,8 +147,34 @@ function blink3 (color: number) {
     strip.show()
     basic.pause(500)
 }
+input.onLogoEvent(TouchButtonEvent.Pressed, function () {
+    colorIndex += 1
+    if (colorIndex == color.length) {
+        colorIndex = 0
+    }
+})
+function changingBrightness () {
+    brightness = 0
+    while (true) {
+        for (let index = 0; index < 50; index++) {
+            strip.setBrightness(brightness)
+            brightness += 2
+            strip.showColor(neopixel.colors(NeoPixelColors.Green))
+            basic.pause(25)
+        }
+        for (let index = 0; index < 50; index++) {
+            strip.setBrightness(brightness)
+            brightness += -2
+            strip.showColor(neopixel.colors(NeoPixelColors.Green))
+            basic.pause(25)
+        }
+    }
+}
+let brightness = 0
 let counter = 0
 let isBlinking = false
+let colorIndex = 0
+let isMorse = false
 let color: number[] = []
 let isRainbow = false
 let strip: neopixel.Strip = null
